@@ -16,22 +16,24 @@
     <a href="provider.html">Provider Dashboard</a> |
     <a href="profile.html">Profile</a>
   </nav>
-  <h2>Register</h2>
-  <form id="registerForm">
-    <label>Name:<br><input type="text" name="name" required></label><br>
-    <label>Email:<br><input type="email" name="email" required></label><br>
-    <label>Password:<br><input type="password" name="password" required></label><br>
-    <label>Phone:<br><input type="text" name="phone" required></label><br>
-    <label>Role:<br>
-      <select name="role" required>
-        <option value="USER">User</option>
-        <option value="PROVIDER">Provider</option>
-      </select>
-    </label><br>
-    <button type="submit">Register</button>
-  </form>
-  <p>Already have an account? <a href="login.html">Login here</a></p>
-  <div id="registerMessage"></div>
+  <div class="container">
+    <h2>Register</h2>
+    <form id="registerForm">
+      <label>Name:<br><input type="text" name="name" required></label><br>
+      <label>Email:<br><input type="email" name="email" required></label><br>
+      <label>Password:<br><input type="password" name="password" required></label><br>
+      <label>Phone:<br><input type="text" name="phone" required></label><br>
+      <label>Role:<br>
+        <select name="role" required>
+          <option value="USER">User</option>
+          <option value="PROVIDER">Provider</option>
+        </select>
+      </label><br>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="login.html">Login here</a></p>
+    <div id="registerMessage"></div>
+  </div>
   <script src="app.js"></script>
 </body>
 </html> 

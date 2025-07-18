@@ -564,4 +564,120 @@ if (window.location.pathname.endsWith('profile.html')) {
       document.getElementById('profileMessage').textContent = 'Profile updated (locally).';
     };
   }
+}
+
+// Service details page logic
+if (window.location.pathname.endsWith('service.html')) {
+  // Helper to get query param
+  function getQueryParam(name) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(name);
+  }
+  const serviceId = parseInt(getQueryParam('id'));
+  if (!serviceId) {
+    document.getElementById('serviceDetails').textContent = 'No service selected.';
+  } else {
+    // Fetch and show service info
+    fetch(`${API_BASE}/services/${serviceId}`)
+      .then(res => res.json())
+      .then(service => {
+        document.getElementById('serviceDetails').innerHTML = `
+          <h3>${service.title}</h3>
+          <p><b>Category:</b> ${service.category}</p>
+          <p><b>Location:</b> ${service.location}</p>
+          <p><b>Price:</b> $${service.price}</p>
+          <p><b>Description:</b> ${service.description}</p>
+        `;
+        // Show booking form for users
+        const user = getUser();
+        if (user && user.role === 'USER') {
+          document.getElementById('serviceBooking').innerHTML = `
+            <h4>Book this Service</h4>
+            <form id="serviceBookingForm">
+              <label>Date:<br><input type="date" name="date" required></label><br>
+              <label>Time:<br><input type="time" name="time" required></label><br>
+              <button type="submit">Book</button>
+            </form>
+            <div id="serviceBookingMessage"></div>
+          `;
+          document.getElementById('serviceBookingForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const bookingDate = this.date.value;
+            const bookingTime = this.time.value + ':00';
+            const booking = {
+              userId: user.id,
+              serviceId: serviceId,
+              providerId: service.providerId,
+              bookingDate: bookingDate,
+              bookingTime: bookingTime,
+              status: 'PENDING'
+            };
+            const res = await fetch(`${API_BASE}/bookings`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(booking)
+            });
+            if (res.ok) {
+              document.getElementById('serviceBookingMessage').textContent = 'Booking successful!';
+              setTimeout(() => { document.getElementById('serviceBookingMessage').textContent = ''; }, 1200);
+            } else {
+              document.getElementById('serviceBookingMessage').textContent = 'Booking failed.';
+            }
+          };
+        }
+        // Show reviews
+        fetch(`${API_BASE}/reviews/service/${serviceId}`)
+          .then(res => res.json())
+          .then(reviews => {
+            const reviewsDiv = document.getElementById('serviceReviews');
+            reviewsDiv.innerHTML = '<h4>Reviews</h4>';
+            if (!reviews.length) {
+              reviewsDiv.innerHTML += '<p>No reviews yet.</p>';
+            } else {
+              reviewsDiv.innerHTML += '<ul>' + reviews.map(r => `<li><b>Rating:</b> ${r.rating} - ${r.comment}</li>`).join('') + '</ul>';
+            }
+            // If user has booked, show review form
+            if (user && user.role === 'USER') {
+              fetch(`${API_BASE}/bookings/user/${user.id}`)
+                .then(res => res.json())
+                .then(bookings => {
+                  const hasBooked = bookings.some(b => b.serviceId === serviceId && b.status !== 'CANCELLED');
+                  if (hasBooked) {
+                    reviewsDiv.innerHTML += `
+                      <h5>Leave a Review</h5>
+                      <form id="serviceReviewForm">
+                        <label>Rating (1-5):<br><input type="number" name="rating" min="1" max="5" required></label><br>
+                        <label>Comment:<br><input type="text" name="comment" required></label><br>
+                        <button type="submit">Submit Review</button>
+                      </form>
+                      <div id="serviceReviewMessage"></div>
+                    `;
+                    document.getElementById('serviceReviewForm').onsubmit = async function(e) {
+                      e.preventDefault();
+                      const rating = this.rating.value;
+                      const comment = this.comment.value;
+                      const review = {
+                        userId: user.id,
+                        serviceId: serviceId,
+                        rating: parseInt(rating),
+                        comment: comment
+                      };
+                      const res = await fetch(`${API_BASE}/reviews`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(review)
+                      });
+                      if (res.ok) {
+                        document.getElementById('serviceReviewMessage').textContent = 'Review submitted!';
+                        setTimeout(() => { window.location.reload(); }, 1000);
+                      } else {
+                        document.getElementById('serviceReviewMessage').textContent = 'Failed to submit review.';
+                      }
+                    };
+                  }
+                });
+            }
+          });
+      });
+  }
 } 

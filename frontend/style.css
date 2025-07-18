@@ -1,39 +1,108 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 2em;
-  background: #fafafa;
+  margin: 0;
+  background: #f4f6f8;
   color: #222;
 }
-h1, h2 {
-  color: #2c3e50;
+
+nav {
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1em 0.5em;
+  text-align: center;
+  margin-bottom: 2em;
 }
-nav a {
+nav a, nav button {
   margin: 0 0.5em;
   text-decoration: none;
   color: #0074d9;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
 }
-nav a:hover {
+nav a:hover, nav button:hover {
   text-decoration: underline;
 }
-form {
-  margin: 1em 0;
+
+.container {
+  max-width: 600px;
+  margin: 2em auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 2em 2em 1.5em 2em;
 }
-input, select, button {
-  margin: 0.3em 0;
-  padding: 0.4em;
+
+h1, h2, h3, h4, h5 {
+  color: #2c3e50;
+  margin-top: 0;
+}
+
+form {
+  margin: 1.5em 0 1em 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+form label {
+  font-weight: 500;
+}
+input, select, button, textarea {
+  margin-top: 0.2em;
+  padding: 0.5em;
   font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 button {
   background: #0074d9;
   color: #fff;
   border: none;
-  border-radius: 3px;
+  border-radius: 4px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 button:hover {
   background: #005fa3;
 }
-#loginMessage, #registerMessage {
+#loginMessage, #registerMessage, #profileMessage, #serviceBookingMessage, #serviceReviewMessage {
   margin-top: 1em;
   color: #c00;
+  font-weight: 500;
+}
+
+ul {
+  padding-left: 1.2em;
+}
+li {
+  margin-bottom: 0.5em;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  background: #fff;
+}
+table th, table td {
+  border: 1px solid #e0e0e0;
+  padding: 0.7em 0.5em;
+  text-align: left;
+}
+table th {
+  background: #f7f7f7;
+  font-weight: 600;
+}
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.5em;
+  margin-bottom: 1.5em;
+}
+.center {
+  text-align: center;
 } 
