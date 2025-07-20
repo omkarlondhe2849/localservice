@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>User Dashboard</h2>
   <nav>
     <a href="index.html">Home</a> |
     <a href="login.html">Login</a> |
@@ -17,7 +16,62 @@
     <a href="provider.html">Provider Dashboard</a> |
     <a href="profile.html">Profile</a>
   </nav>
-  <div id="userInfo"></div>
+  <div class="container">
+    <div class="dashboard-header">
+      <h2>User Dashboard</h2>
+      <div id="userInfo"></div>
+    </div>
+    
+    <div class="dashboard-layout">
+      <div class="dashboard-main">
+        <div class="dashboard-stats">
+          <div class="stat-item">
+            <h3>Active Bookings</h3>
+            <p id="activeBookings">Loading...</p>
+          </div>
+          <div class="stat-item">
+            <h3>Completed Services</h3>
+            <p id="completedServices">Loading...</p>
+          </div>
+          <div class="stat-item">
+            <h3>Reviews Given</h3>
+            <p id="reviewsGiven">Loading...</p>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="action-buttons">
+            <a href="services.html" class="btn-primary">Browse Services</a>
+            <a href="bookings.html" class="btn-secondary">View My Bookings</a>
+            <a href="profile.html" class="btn-secondary">Edit Profile</a>
+          </div>
+        </div>
+
+        <div class="recent-activity">
+          <h3>Recent Activity</h3>
+          <div id="recentActivity">Loading recent activity...</div>
+        </div>
+      </div>
+      
+      <div class="dashboard-sidebar">
+        <div class="welcome-card">
+          <h3>Welcome Back!</h3>
+          <p>Here's what's happening with your account today.</p>
+        </div>
+        
+        <div class="helpful-links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="services.html">Find New Services</a></li>
+            <li><a href="bookings.html">Manage Bookings</a></li>
+            <li><a href="profile.html">Update Profile</a></li>
+            <li><a href="index.html">Browse Categories</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="app.js"></script>
 </body>
 </html> 

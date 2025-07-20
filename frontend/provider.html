@@ -16,9 +16,92 @@
     <a href="provider.html">Provider Dashboard</a> |
     <a href="profile.html">Profile</a>
   </nav>
-  <h2>Provider Dashboard</h2>
-  <div id="providerServices">Loading...</div>
-  <div id="providerBookings"></div>
+  <div class="container">
+    <div class="dashboard-header">
+      <h2>Provider Dashboard</h2>
+      <div id="providerWelcome">Welcome to your provider dashboard!</div>
+    </div>
+    
+    <div class="dashboard-layout">
+      <div class="dashboard-main">
+        <div class="provider-stats">
+          <div class="stat-item">
+            <h3>Active Services</h3>
+            <p id="activeServices">Loading...</p>
+          </div>
+          <div class="stat-item">
+            <h3>Pending Bookings</h3>
+            <p id="pendingBookings">Loading...</p>
+          </div>
+          <div class="stat-item">
+            <h3>Total Earnings</h3>
+            <p id="totalEarnings">Loading...</p>
+          </div>
+          <div class="stat-item">
+            <h3>Average Rating</h3>
+            <p id="averageRating">Loading...</p>
+          </div>
+        </div>
+
+        <div class="provider-actions">
+          <h3>Manage Your Business</h3>
+          <div class="action-buttons">
+            <button onclick="showAddServiceForm()" class="btn-primary">Add New Service</button>
+            <a href="services.html" class="btn-secondary">View All Services</a>
+            <a href="profile.html" class="btn-secondary">Edit Profile</a>
+          </div>
+        </div>
+
+        <div class="provider-tips">
+          <h3>💡 Tips for Success</h3>
+          <div class="tips-grid">
+            <div class="tip-card">
+              <h4>Complete Your Profile</h4>
+              <p>Add detailed descriptions and photos to attract more customers.</p>
+            </div>
+            <div class="tip-card">
+              <h4>Respond Quickly</h4>
+              <p>Confirm or respond to bookings within 24 hours to maintain good ratings.</p>
+            </div>
+            <div class="tip-card">
+              <h4>Set Competitive Prices</h4>
+              <p>Research local market rates to offer competitive pricing.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="providerServices">Loading...</div>
+        <div id="providerBookings"></div>
+      </div>
+      
+      <div class="dashboard-sidebar">
+        <div class="welcome-card">
+          <h3>Business Overview</h3>
+          <p>Track your performance and grow your business.</p>
+        </div>
+        
+        <div class="helpful-links">
+          <h3>Quick Actions</h3>
+          <ul>
+            <li><a href="#" onclick="showAddServiceForm()">Add New Service</a></li>
+            <li><a href="services.html">View All Services</a></li>
+            <li><a href="profile.html">Update Profile</a></li>
+            <li><a href="index.html">View Platform</a></li>
+          </ul>
+        </div>
+        
+        <div class="business-tips">
+          <h3>💼 Business Tips</h3>
+          <ul>
+            <li>Keep your availability updated</li>
+            <li>Respond to customer inquiries promptly</li>
+            <li>Maintain high service quality</li>
+            <li>Ask for reviews after service completion</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="app.js"></script>
 </body>
 </html> 

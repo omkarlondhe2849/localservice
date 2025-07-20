@@ -16,9 +16,35 @@
     <a href="provider.html">Provider Dashboard</a> |
     <a href="profile.html">Profile</a>
   </nav>
-  <h2>Available Services</h2>
-  <div id="servicesList">Loading...</div>
-  <div id="serviceReviewContainer"></div>
+  <div class="container">
+    <div class="services-header">
+      <h2>Available Services</h2>
+      <div class="search-filters">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search services..." onkeyup="searchServices()">
+          <button onclick="searchServices()" class="search-btn">🔍</button>
+        </div>
+        <div class="filter-options">
+          <select id="categoryFilter" onchange="filterServices()">
+            <option value="">All Categories</option>
+          </select>
+          <select id="locationFilter" onchange="filterServices()">
+            <option value="">All Locations</option>
+          </select>
+          <select id="priceFilter" onchange="filterServices()">
+            <option value="">All Prices</option>
+            <option value="0-50">$0 - $50</option>
+            <option value="50-100">$50 - $100</option>
+            <option value="100-200">$100 - $200</option>
+            <option value="200+">$200+</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="searchResults"></div>
+    <div id="servicesList">Loading...</div>
+    <div id="serviceReviewContainer"></div>
+  </div>
   <script src="app.js"></script>
 </body>
 </html> 

@@ -33,7 +33,7 @@ CREATE TABLE bookings (
     status ENUM('PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (service_id) REFERENCES services(id),
+    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
     FOREIGN KEY (provider_id) REFERENCES users(id)
 );
 
@@ -46,5 +46,5 @@ CREATE TABLE reviews (
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (service_id) REFERENCES services(id)
+    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
 );
