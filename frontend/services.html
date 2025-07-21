@@ -8,16 +8,16 @@
 </head>
 <body>
   <nav>
-    <a href="index.html">Home</a> |
-    <a href="login.html">Login</a> |
-    <a href="register.html">Register</a> |
-    <a href="services.html">Services</a> |
-    <a href="dashboard.html">User Dashboard</a> |
-    <a href="provider.html">Provider Dashboard</a> |
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+    <a href="services.html">Services</a>
+    <a href="dashboard.html">User Dashboard</a>
+    <a href="provider.html">Provider Dashboard</a>
     <a href="profile.html">Profile</a>
   </nav>
   <div class="container">
-    <div class="services-header">
+    <section class="services-header">
       <h2>Available Services</h2>
       <div class="search-filters">
         <div class="search-box">
@@ -40,9 +40,9 @@
           </select>
         </div>
       </div>
-    </div>
+    </section>
     <div id="searchResults"></div>
-    <div id="servicesList">Loading...</div>
+    <div id="servicesList" class="services-grid">Loading...</div>
     <div id="serviceReviewContainer"></div>
   </div>
   <script src="app.js"></script>

@@ -250,6 +250,7 @@ window.showBookingForm = function(serviceId, serviceTitle, providerId) {
     <form id="bookingForm">
       <label>Date:<br><input type="date" name="date" required></label><br>
       <label>Time:<br><input type="time" name="time" required></label><br>
+      <label>Address:<br><input type="text" name="address" required></label><br>
       <button type="submit">Confirm Booking</button>
       <button type="button" onclick="hideBookingForm()">Cancel</button>
     </form>
@@ -265,6 +266,7 @@ window.showBookingForm = function(serviceId, serviceTitle, providerId) {
       providerId: providerId,
       bookingDate: bookingDate,
       bookingTime: bookingTime,
+      address: this.address.value,
       status: 'PENDING'
     };
     const res = await fetch(`${API_BASE}/bookings`, {
@@ -527,7 +529,15 @@ if (document.getElementById('providerServices')) {
         <form id="addServiceForm">
           <label>Title:<br><input type="text" name="title" required></label><br>
           <label>Description:<br><input type="text" name="description" required></label><br>
-          <label>Category:<br><input type="text" name="category" required></label><br>
+          <label>Category:<br>
+            <select name="category" required>
+              <option value="">Select Category</option>
+              <option value="Home Services">Home Services</option>
+              <option value="Professional Services">Professional Services</option>
+              <option value="Health & Wellness">Health & Wellness</option>
+              <option value="Education & Training">Education & Training</option>
+            </select>
+          </label><br>
           <label>Location:<br><input type="text" name="location" required></label><br>
           <label>Price:<br><input type="number" name="price" step="0.01" required></label><br>
           <button type="submit">Add</button>
@@ -569,7 +579,15 @@ if (document.getElementById('providerServices')) {
             <form id="editServiceForm">
               <label>Title:<br><input type="text" name="title" value="${service.title}" required></label><br>
               <label>Description:<br><input type="text" name="description" value="${service.description}" required></label><br>
-              <label>Category:<br><input type="text" name="category" value="${service.category}" required></label><br>
+              <label>Category:<br>
+                <select name="category" required>
+                  <option value="">Select Category</option>
+                  <option value="Home Services" ${service.category === 'Home Services' ? 'selected' : ''}>Home Services</option>
+                  <option value="Professional Services" ${service.category === 'Professional Services' ? 'selected' : ''}>Professional Services</option>
+                  <option value="Health & Wellness" ${service.category === 'Health & Wellness' ? 'selected' : ''}>Health & Wellness</option>
+                  <option value="Education & Training" ${service.category === 'Education & Training' ? 'selected' : ''}>Education & Training</option>
+                </select>
+              </label><br>
               <label>Location:<br><input type="text" name="location" value="${service.location}" required></label><br>
               <label>Price:<br><input type="number" name="price" step="0.01" value="${service.price}" required></label><br>
               <button type="submit">Update</button>
@@ -640,7 +658,7 @@ if (document.getElementById('providerServices')) {
 
         document.getElementById('providerBookings').innerHTML =
           '<h3>Your Service Bookings</h3>' +
-          '<table><tr><th>Service</th><th>Customer</th><th>Contact Info</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr>' +
+          '<table><tr><th>Service</th><th>Customer</th><th>Contact Info</th><th>Address</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr>' +
           bookingsWithCustomers.map(item => {
             const b = item.booking;
             const customer = item.customer;
@@ -669,6 +687,7 @@ if (document.getElementById('providerServices')) {
               <td>${service ? service.title : 'Unknown Service'}</td>
               <td><strong>${customerName}</strong></td>
               <td>${customerContact}</td>
+              <td>${b.address || ''}</td>
               <td>${b.bookingDate}</td>
               <td>${b.bookingTime}</td>
               <td><span class="status-${b.status.toLowerCase()}">${b.status}</span></td>
@@ -683,21 +702,19 @@ if (document.getElementById('providerServices')) {
     
     async function updateProviderStats() {
       try {
-        const bookingsRes = await fetch(`${API_BASE}/bookings/provider/${user.id}/with-customers`);
-        const bookingsWithCustomers = await bookingsRes.json();
-        const bookings = bookingsWithCustomers.map(item => item.booking);
-        
-        const activeServices = myServices.length;
-        const pendingBookings = bookings.filter(b => b.status === 'PENDING').length;
-        const totalEarnings = bookings.filter(b => b.status === 'COMPLETED').length * 50; // Assuming $50 per service
-        const avgRating = 4.5; // This would come from reviews
-        
-        document.getElementById('activeServices').textContent = activeServices;
-        document.getElementById('pendingBookings').textContent = pendingBookings;
-        document.getElementById('totalEarnings').textContent = `$${totalEarnings}`;
-        document.getElementById('averageRating').textContent = `${avgRating}★`;
+        const statsRes = await fetch(`${API_BASE}/services/provider/${user.id}/stats`);
+        if (!statsRes.ok) throw new Error('Failed to fetch provider stats');
+        const stats = await statsRes.json();
+        document.getElementById('activeServices').textContent = stats.activeServices;
+        document.getElementById('pendingBookings').textContent = stats.pendingBookings;
+        document.getElementById('totalEarnings').textContent = `$${stats.totalEarnings}`;
+        document.getElementById('averageRating').textContent = `${stats.averageRating}★`;
       } catch (error) {
         console.error('Failed to update provider stats:', error);
+        document.getElementById('activeServices').textContent = 'Error';
+        document.getElementById('pendingBookings').textContent = 'Error';
+        document.getElementById('totalEarnings').textContent = 'Error';
+        document.getElementById('averageRating').textContent = 'Error';
       }
     }
     
@@ -750,31 +767,15 @@ document.addEventListener('DOMContentLoaded', updateNav);
 if (document.getElementById('stats-grid')) {
   async function loadHomepageStats() {
     try {
-      const servicesRes = await fetch(`${API_BASE}/services`);
-      const services = await servicesRes.json();
-      
-      const bookingsRes = await fetch(`${API_BASE}/bookings`);
-      const bookings = await bookingsRes.json();
-      
-      const reviewsRes = await fetch(`${API_BASE}/reviews`);
-      const reviews = await reviewsRes.json();
-      
-      const activeServices = services.length;
-      const verifiedProviders = new Set(services.map(s => s.providerId)).size;
-      const happyCustomers = new Set(bookings.map(b => b.userId)).size;
-      
-      let avgRating = 0;
-      if (reviews.length > 0) {
-        const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
-        avgRating = Math.round((totalRating / reviews.length) * 10) / 10;
-      }
-      
+      const statsRes = await fetch(`${API_BASE}/services/platform-stats`);
+      if (!statsRes.ok) throw new Error('Failed to fetch platform stats');
+      const stats = await statsRes.json();
       const statCards = document.querySelectorAll('.stat-card h3');
       if (statCards.length >= 4) {
-        statCards[0].textContent = `${activeServices}+`;
-        statCards[1].textContent = `${verifiedProviders}+`;
-        statCards[2].textContent = `${happyCustomers}+`;
-        statCards[3].textContent = `${avgRating}★`;
+        statCards[0].textContent = `${stats.activeServices}+`;
+        statCards[1].textContent = `${stats.verifiedProviders}+`;
+        statCards[2].textContent = `${stats.happyCustomers}+`;
+        statCards[3].textContent = `${stats.averageRating}\u2605`;
       }
     } catch (error) {
       console.error('Failed to load homepage stats:', error);

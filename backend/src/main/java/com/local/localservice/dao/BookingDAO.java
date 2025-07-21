@@ -60,14 +60,15 @@ public class BookingDAO {
         logger.debug("Executing INSERT for booking: user ID {}, service ID {}, provider ID {}", 
                    booking.getUserId(), booking.getServiceId(), booking.getProviderId());
         try {
-            String sql = "INSERT INTO bookings(user_id, service_id, provider_id, booking_date, booking_time, status) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO bookings(user_id, service_id, provider_id, booking_date, booking_time, status, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
             int result = jdbcTemplate.update(sql,
                     booking.getUserId(),
                     booking.getServiceId(),
                     booking.getProviderId(),
                     booking.getBookingDate(),
                     booking.getBookingTime(),
-                    booking.getStatus());
+                    booking.getStatus(),
+                    booking.getAddress());
             logger.info("Booking saved successfully, rows affected: {}", result);
             return result;
         } catch (Exception e) {
@@ -85,6 +86,44 @@ public class BookingDAO {
             return result;
         } catch (Exception e) {
             logger.error("Error updating booking status for ID {}: {}", bookingId, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public int countByProviderIdAndStatus(Long providerId, String status) {
+        logger.debug("Executing COUNT for bookings with provider_id = {} and status = {}", providerId, status);
+        try {
+            String sql = "SELECT COUNT(*) FROM bookings WHERE provider_id = ? AND status = ?";
+            Integer count = jdbcTemplate.queryForObject(sql, new Object[]{providerId, status}, Integer.class);
+            logger.info("Counted {} bookings for provider_id {} with status {}", count, providerId, status);
+            return count != null ? count : 0;
+        } catch (Exception e) {
+            logger.error("Error counting bookings for provider_id {} and status {}: {}", providerId, status, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public int countCompletedByProviderId(Long providerId) {
+        logger.debug("Executing COUNT for completed bookings with provider_id = {}", providerId);
+        try {
+            String sql = "SELECT COUNT(*) FROM bookings WHERE provider_id = ? AND status = 'COMPLETED'";
+            Integer count = jdbcTemplate.queryForObject(sql, new Object[]{providerId}, Integer.class);
+            logger.info("Counted {} completed bookings for provider_id {}", count, providerId);
+            return count != null ? count : 0;
+        } catch (Exception e) {
+            logger.error("Error counting completed bookings for provider_id {}: {}", providerId, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public Booking findById(Long id) {
+        logger.debug("Executing query: SELECT * FROM bookings WHERE id = {}", id);
+        try {
+            String sql = "SELECT * FROM bookings WHERE id = ?";
+            List<Booking> bookings = jdbcTemplate.query(sql, new Object[]{id}, new BeanPropertyRowMapper<>(Booking.class));
+            return bookings.isEmpty() ? null : bookings.get(0);
+        } catch (Exception e) {
+            logger.error("Error retrieving booking with ID {}: {}", id, e.getMessage(), e);
             throw e;
         }
     }

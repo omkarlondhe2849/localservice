@@ -91,4 +91,18 @@ public class ReviewDAO {
             throw e;
         }
     }
+
+    public Double getPlatformAverageRating() {
+        logger.debug("Executing query: SELECT AVG(rating) FROM reviews");
+        try {
+            String sql = "SELECT AVG(rating) FROM reviews";
+            Double result = jdbcTemplate.queryForObject(sql, Double.class);
+            Double roundedResult = result != null ? Math.round(result * 10.0) / 10.0 : null;
+            logger.info("Platform average rating: {}", roundedResult);
+            return roundedResult;
+        } catch (Exception e) {
+            logger.error("Error calculating platform average rating: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
 }

@@ -67,4 +67,76 @@ public class UserDAO {
             throw e;
         }
     }
+
+    public User findByEmail(String email) {
+        logger.debug("Executing query: SELECT * FROM users WHERE email = {}", email);
+        try {
+            String sql = "SELECT * FROM users WHERE email = ?";
+            List<User> users = jdbcTemplate.query(sql, new Object[]{email}, new BeanPropertyRowMapper<>(User.class));
+            return users.isEmpty() ? null : users.get(0);
+        } catch (Exception e) {
+            logger.error("Error retrieving user with email {}: {}", email, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public int updateResetToken(String email, String token, String expiry) {
+        logger.debug("Updating reset token for email: {}", email);
+        try {
+            String sql = "UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE email = ?";
+            return jdbcTemplate.update(sql, token, expiry, email);
+        } catch (Exception e) {
+            logger.error("Error updating reset token for email {}: {}", email, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public User findByResetToken(String token) {
+        logger.debug("Executing query: SELECT * FROM users WHERE reset_token = {}", token);
+        try {
+            String sql = "SELECT * FROM users WHERE reset_token = ?";
+            List<User> users = jdbcTemplate.query(sql, new Object[]{token}, new BeanPropertyRowMapper<>(User.class));
+            return users.isEmpty() ? null : users.get(0);
+        } catch (Exception e) {
+            logger.error("Error retrieving user with reset token {}: {}", token, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public int updatePasswordByEmail(String email, String newPassword) {
+        logger.debug("Updating password for email: {}", email);
+        try {
+            String sql = "UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE email = ?";
+            return jdbcTemplate.update(sql, newPassword, email);
+        } catch (Exception e) {
+            logger.error("Error updating password for email {}: {}", email, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public int countProviders() {
+        logger.debug("Executing COUNT for providers");
+        try {
+            String sql = "SELECT COUNT(*) FROM users WHERE role = 'PROVIDER'";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+            logger.info("Counted {} providers", count);
+            return count != null ? count : 0;
+        } catch (Exception e) {
+            logger.error("Error counting providers: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public int countCustomers() {
+        logger.debug("Executing COUNT for customers");
+        try {
+            String sql = "SELECT COUNT(*) FROM users WHERE role = 'USER'";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+            logger.info("Counted {} customers", count);
+            return count != null ? count : 0;
+        } catch (Exception e) {
+            logger.error("Error counting customers: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
 }

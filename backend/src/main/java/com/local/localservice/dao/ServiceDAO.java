@@ -99,4 +99,30 @@ public class ServiceDAO {
             throw e;
         }
     }
+
+    public int countByProviderId(Long providerId) {
+        logger.debug("Executing COUNT for services with provider_id = {}", providerId);
+        try {
+            String sql = "SELECT COUNT(*) FROM services WHERE provider_id = ?";
+            Integer count = jdbcTemplate.queryForObject(sql, new Object[]{providerId}, Integer.class);
+            logger.info("Counted {} services for provider_id {}", count, providerId);
+            return count != null ? count : 0;
+        } catch (Exception e) {
+            logger.error("Error counting services for provider_id {}: {}", providerId, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public int countAll() {
+        logger.debug("Executing COUNT for all services");
+        try {
+            String sql = "SELECT COUNT(*) FROM services";
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+            logger.info("Counted {} services in total", count);
+            return count != null ? count : 0;
+        } catch (Exception e) {
+            logger.error("Error counting all services: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
 }

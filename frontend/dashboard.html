@@ -8,23 +8,22 @@
 </head>
 <body>
   <nav>
-    <a href="index.html">Home</a> |
-    <a href="login.html">Login</a> |
-    <a href="register.html">Register</a> |
-    <a href="services.html">Services</a> |
-    <a href="dashboard.html">User Dashboard</a> |
-    <a href="provider.html">Provider Dashboard</a> |
+    <a href="index.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+    <a href="services.html">Services</a>
+    <a href="dashboard.html">User Dashboard</a>
+    <a href="provider.html">Provider Dashboard</a>
     <a href="profile.html">Profile</a>
   </nav>
   <div class="container">
-    <div class="dashboard-header">
+    <section class="dashboard-header">
       <h2>User Dashboard</h2>
       <div id="userInfo"></div>
-    </div>
-    
+    </section>
     <div class="dashboard-layout">
-      <div class="dashboard-main">
-        <div class="dashboard-stats">
+      <main class="dashboard-main">
+        <section class="dashboard-stats">
           <div class="stat-item">
             <h3>Active Bookings</h3>
             <p id="activeBookings">Loading...</p>
@@ -37,29 +36,25 @@
             <h3>Reviews Given</h3>
             <p id="reviewsGiven">Loading...</p>
           </div>
-        </div>
-
-        <div class="quick-actions">
+        </section>
+        <section class="quick-actions">
           <h3>Quick Actions</h3>
           <div class="action-buttons">
             <a href="services.html" class="btn-primary">Browse Services</a>
             <a href="bookings.html" class="btn-secondary">View My Bookings</a>
             <a href="profile.html" class="btn-secondary">Edit Profile</a>
           </div>
-        </div>
-
-        <div class="recent-activity">
+        </section>
+        <section class="recent-activity">
           <h3>Recent Activity</h3>
           <div id="recentActivity">Loading recent activity...</div>
-        </div>
-      </div>
-      
-      <div class="dashboard-sidebar">
+        </section>
+      </main>
+      <aside class="dashboard-sidebar">
         <div class="welcome-card">
           <h3>Welcome Back!</h3>
           <p>Here's what's happening with your account today.</p>
         </div>
-        
         <div class="helpful-links">
           <h3>Quick Links</h3>
           <ul>
@@ -69,7 +64,7 @@
             <li><a href="index.html">Browse Categories</a></li>
           </ul>
         </div>
-      </div>
+      </aside>
     </div>
   </div>
   <script src="app.js"></script>

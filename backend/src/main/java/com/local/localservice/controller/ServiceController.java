@@ -3,6 +3,7 @@ package com.local.localservice.controller;
 import com.local.localservice.dao.ServiceDAO;
 import com.local.localservice.dao.UserDAO;
 import com.local.localservice.dao.ReviewDAO;
+import com.local.localservice.dao.BookingDAO;
 import com.local.localservice.model.Service;
 import com.local.localservice.model.User;
 import org.slf4j.Logger;
@@ -29,6 +30,9 @@ public class ServiceController {
     
     @Autowired
     private ReviewDAO reviewDAO;
+
+    @Autowired
+    private BookingDAO bookingDAO;
 
     @GetMapping
     public List<Service> getAllServices() {
@@ -129,6 +133,52 @@ public class ServiceController {
         } catch (Exception e) {
             logger.error("Error deleting service with ID {}: {}", id, e.getMessage(), e);
             return ResponseEntity.status(500).body("Failed to delete service");
+        }
+    }
+
+    @GetMapping("/provider/{providerId}/stats")
+    public ResponseEntity<?> getProviderStats(@PathVariable Long providerId) {
+        logger.info("GET /services/provider/{}/stats - Retrieving provider dashboard stats", providerId);
+        try {
+            int activeServices = serviceDAO.countByProviderId(providerId);
+            int pendingBookings = bookingDAO.countByProviderIdAndStatus(providerId, "PENDING");
+            int completedBookings = bookingDAO.countCompletedByProviderId(providerId);
+            // For demo, assume each completed booking is $50
+            int totalEarnings = completedBookings * 50;
+            Double avgRating = reviewDAO.getAverageRatingForProvider(providerId);
+            if (avgRating == null) avgRating = 0.0;
+            Map<String, Object> stats = new HashMap<>();
+            stats.put("activeServices", activeServices);
+            stats.put("pendingBookings", pendingBookings);
+            stats.put("totalEarnings", totalEarnings);
+            stats.put("averageRating", avgRating);
+            logger.info("Provider stats for {}: {}", providerId, stats);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            logger.error("Error retrieving provider stats for {}: {}", providerId, e.getMessage(), e);
+            return ResponseEntity.status(500).body("Failed to retrieve provider stats");
+        }
+    }
+
+    @GetMapping("/platform-stats")
+    public ResponseEntity<?> getPlatformStats() {
+        logger.info("GET /services/platform-stats - Retrieving platform statistics");
+        try {
+            int activeServices = serviceDAO.countAll();
+            int verifiedProviders = userDAO.countProviders();
+            int happyCustomers = userDAO.countCustomers();
+            Double avgRating = reviewDAO.getPlatformAverageRating();
+            if (avgRating == null) avgRating = 0.0;
+            Map<String, Object> stats = new HashMap<>();
+            stats.put("activeServices", activeServices);
+            stats.put("verifiedProviders", verifiedProviders);
+            stats.put("happyCustomers", happyCustomers);
+            stats.put("averageRating", avgRating);
+            logger.info("Platform stats: {}", stats);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            logger.error("Error retrieving platform stats: {}", e.getMessage(), e);
+            return ResponseEntity.status(500).body("Failed to retrieve platform stats");
         }
     }
 }

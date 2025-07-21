@@ -8,6 +8,8 @@ public class User {
     private String phone;
     private String role;
     private String createdAt;
+    private String resetToken;
+    private String resetTokenExpiry;
 	public Long getId() {
 		return id;
 	}
@@ -49,6 +51,18 @@ public class User {
 	}
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+	public String getResetToken() {
+		return resetToken;
+	}
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
+	}
+	public String getResetTokenExpiry() {
+		return resetTokenExpiry;
+	}
+	public void setResetTokenExpiry(String resetTokenExpiry) {
+		this.resetTokenExpiry = resetTokenExpiry;
 	}
 	@Override
 	public String toString() {

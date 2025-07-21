@@ -12,6 +12,7 @@ public class Booking {
     private Time bookingTime;
     private String status;  // PENDING, CONFIRMED, COMPLETED, CANCELLED
     private String createdAt;
+    private String address;
 	public Long getId() {
 		return id;
 	}
@@ -60,15 +61,21 @@ public class Booking {
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
 	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 	@Override
 	public String toString() {
 		return "Booking [id=" + id + ", userId=" + userId + ", serviceId=" + serviceId + ", providerId=" + providerId
 				+ ", bookingDate=" + bookingDate + ", bookingTime=" + bookingTime + ", status=" + status
-				+ ", createdAt=" + createdAt + ", getId()=" + getId() + ", getUserId()=" + getUserId()
-				+ ", getServiceId()=" + getServiceId() + ", getProviderId()=" + getProviderId() + ", getBookingDate()="
-				+ getBookingDate() + ", getBookingTime()=" + getBookingTime() + ", getStatus()=" + getStatus()
-				+ ", getCreatedAt()=" + getCreatedAt() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-				+ ", toString()=" + super.toString() + "]";
+				+ ", createdAt=" + createdAt + ", address=" + address + ", getId()=" + getId() + ", getUserId()="
+				+ getUserId() + ", getServiceId()=" + getServiceId() + ", getProviderId()=" + getProviderId()
+				+ ", getBookingDate()=" + getBookingDate() + ", getBookingTime()=" + getBookingTime() + ", getStatus()="
+				+ getStatus() + ", getCreatedAt()=" + getCreatedAt() + ", getAddress()=" + getAddress() + ", getClass()="
+				+ getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
 	}
 
     // Getters and Setters
