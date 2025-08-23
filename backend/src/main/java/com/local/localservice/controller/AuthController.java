@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -114,6 +116,26 @@ public class AuthController {
         } catch (Exception e) {
             logger.error("Error in reset password: {}", e.getMessage(), e);
             return ResponseEntity.status(500).body("Failed to reset password");
+        }
+    }
+
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User user) {
+        logger.info("PUT /users/{} - Updating user profile", userId);
+        try {
+            user.setId(userId); // Ensure the ID from the path is used
+            int rows = userDAO.update(user);
+            if (rows > 0) {
+                User updatedUser = userDAO.findById(userId);
+                logger.info("User profile updated successfully for ID: {}", userId);
+                return ResponseEntity.ok(updatedUser);
+            } else {
+                logger.warn("No user found with ID {} for update", userId);
+                return ResponseEntity.status(404).body("User not found");
+            }
+        } catch (Exception e) {
+            logger.error("Error updating user profile for ID {}: {}", userId, e.getMessage(), e);
+            return ResponseEntity.status(500).body("Failed to update user profile");
         }
     }
 }

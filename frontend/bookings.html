@@ -3,21 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bookings - Local Service Provider</title>
+  <title>My Bookings - Local Service Provider</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .bookings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .booking-controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .booking-filter {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      min-width: 150px;
+    }
+    .booking-stats {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      min-width: 120px;
+      text-align: center;
+    }
+    .stat-card .number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1976D2;
+    }
+    .stat-card .label {
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html">Home</a> |
-    <a href="login.html">Login</a> |
-    <a href="register.html">Register</a> |
-    <a href="services.html">Services</a> |
-    <a href="dashboard.html">User Dashboard</a> |
-    <a href="provider.html">Provider Dashboard</a> |
-    <a href="profile.html">Profile</a>
-  </nav>
+  <nav></nav>
   <div class="container">
-    <h2>Your Bookings</h2>
+    <div class="bookings-header">
+      <h2>My Bookings</h2>
+      <div class="booking-controls">
+        <label for="statusFilter">Status:</label>
+        <select id="statusFilter" class="booking-filter">
+          <option value="PENDING" selected>Pending</option>
+          <option value="CONFIRMED">Confirmed</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CANCELLED">Cancelled</option>
+          <option value="ALL">All Bookings</option>
+        </select>
+        <label for="showEntries">Show:</label>
+        <select id="showEntries" class="booking-filter">
+          <option value="10" selected>10 Bookings</option>
+          <option value="25">25 Bookings</option>
+          <option value="all">All Bookings</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="booking-stats">
+      <div class="stat-card">
+        <div class="number" id="pendingCount">0</div>
+        <div class="label">Pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="confirmedCount">0</div>
+        <div class="label">Confirmed</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="completedCount">0</div>
+        <div class="label">Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="cancelledCount">0</div>
+        <div class="label">Cancelled</div>
+      </div>
+    </div>
+
     <div id="bookingsList">Loading...</div>
   </div>
   <script src="app.js"></script>

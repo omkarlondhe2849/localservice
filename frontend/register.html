@@ -3,36 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - Local Service Provider</title>
+  <title>Register - Book Your Service</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <nav>
-    <a href="index.html">Home</a> |
-    <a href="login.html">Login</a> |
-    <a href="register.html">Register</a> |
-    <a href="services.html">Services</a> |
-    <a href="dashboard.html">User Dashboard</a> |
-    <a href="provider.html">Provider Dashboard</a> |
-    <a href="profile.html">Profile</a>
-  </nav>
-  <div class="container">
-    <h2>Register</h2>
+<body class="login-page-body">
+  <div class="login-container">
+    <div class="login-left">
+      <h1 class="login-brand">book your service</h1>
+      <p class="login-tagline">Connect with trusted local service providers for any job, big or small.</p>
+    </div>
+    <div class="login-right">
+      <div class="login-box">
     <form id="registerForm">
-      <label>Name:<br><input type="text" name="name" required></label><br>
-      <label>Email:<br><input type="email" name="email" required></label><br>
-      <label>Password:<br><input type="password" name="password" required></label><br>
-      <label>Phone:<br><input type="text" name="phone" required></label><br>
-      <label>Role:<br>
+          <input type="text" name="name" placeholder="Full Name" required>
+          <input type="email" name="email" placeholder="Email Address" required>
+          <input type="password" name="password" placeholder="New Password" required>
+          <input type="text" name="phone" placeholder="Phone Number" required>
         <select name="role" required>
+            <option value="" disabled selected>Register as a...</option>
           <option value="USER">User</option>
           <option value="PROVIDER">Provider</option>
         </select>
-      </label><br>
-      <button type="submit">Register</button>
+          <button type="submit" class="btn-create-account" style="width:100%; margin-top:0.5em;">Sign Up</button>
     </form>
-    <p>Already have an account? <a href="login.html">Login here</a></p>
     <div id="registerMessage"></div>
+        <hr class="login-divider">
+        <a href="login.html" class="forgot-password-link">Already have an account?</a>
+      </div>
+    </div>
   </div>
   <script src="app.js"></script>
 </body>

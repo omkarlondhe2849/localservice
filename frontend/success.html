@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Success - Local Service</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .success-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      fill: white;
+    }
+
+    .success-title {
+      color: #2E7D32;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .success-message {
+      color: #555;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .booking-details {
+      background: #F5F5F5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .booking-details h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .next-steps {
+      background: #E8F5E9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .next-steps h3 {
+      color: #2E7D32;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .next-steps ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .next-steps li {
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .btn-primary {
+      background: #1976D2;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .btn-secondary {
+      background: #757575;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: #1565C0;
+    }
+
+    .btn-secondary:hover {
+      background: #616161;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 3px solid #3498db;
+      animation: spin 1s linear infinite;
+      margin: 20px 0;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #confirmationMessage {
+      color: #666;
+      margin: 10px 0;
+    }
+
+    .error-message {
+      color: #D32F2F;
+      background: #FFEBEE;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <nav></nav>
+  <div class="success-container">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+      </svg>
+    </div>
+    <h1 class="success-title">Payment Successful!</h1>
+    <p class="success-message">Thank you for booking a service with us. Your payment has been processed successfully.</p>
+    
+    <div id="bookingDetails" class="booking-details">
+      <h3>Booking Details</h3>
+      <div id="bookingInfo">
+        <div class="loading"></div>
+        <p>Confirming your booking...</p>
+      </div>
+    </div>
+
+    <div class="next-steps">
+      <h3>Next Steps</h3>
+      <ol>
+        <li>You will receive a confirmation email with your booking details and OTP.</li>
+        <li>The service provider will be notified and will confirm the booking.</li>
+        <li>Keep the OTP handy - you'll need to share it with the provider after service completion.</li>
+        <li>After the service is completed, please rate and review your experience.</li>
+      </ol>
+    </div>
+
+    <div id="confirmationMessage"></div>
+
+    <div class="action-buttons">
+      <a href="bookings.html" class="btn-primary">View My Bookings</a>
+      <a href="services.html" class="btn-secondary">Browse More Services</a>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8080';
+    const bookingId = localStorage.getItem('lastBookingId');
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+
+    async function loadBookingDetails() {
+      try {
+        if (!bookingId || !sessionId) {
+          throw new Error('Missing booking or session information');
+        }
+
+        // First confirm the payment
+        const confirmRes = await fetch(`${API_BASE}/bookings/confirm-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId, sessionId })
+        });
+
+        if (!confirmRes.ok) {
+          throw new Error('Failed to confirm payment');
+        }
+
+        const confirmMsg = await confirmRes.text();
+        document.getElementById('confirmationMessage').textContent = confirmMsg;
+
+        // Then fetch booking details
+        const bookingRes = await fetch(`${API_BASE}/bookings/user/${JSON.parse(localStorage.getItem('user')).id}`);
+        const bookings = await bookingRes.json();
+        const booking = bookings.find(b => b.id === parseInt(bookingId));
+
+        if (!booking) {
+          throw new Error('Booking not found');
+        }
+
+        // Fetch service details
+        const serviceRes = await fetch(`${API_BASE}/services/${booking.serviceId}`);
+        const service = await serviceRes.json();
+
+        // Update booking details section
+        document.getElementById('bookingInfo').innerHTML = `
+          <p><strong>Service:</strong> ${service.title}</p>
+          <p><strong>Date:</strong> ${booking.bookingDate}</p>
+          <p><strong>Time:</strong> ${booking.bookingTime}</p>
+          <p><strong>Address:</strong> ${booking.address || '(not provided)'}</p>
+          <p><strong>Amount Paid:</strong> &#8377;${service.price}</p>
+          <p><strong>Booking ID:</strong> ${booking.id}</p>
+          <p><strong>Status:</strong> <span style="color: #2E7D32; font-weight: bold;">Confirmed</span></p>
+        `;
+
+          localStorage.removeItem('lastBookingId');
+      } catch (error) {
+        document.getElementById('bookingInfo').innerHTML = `
+          <div class="error-message">
+            ${error.message || 'An error occurred while loading booking details.'}
+          </div>
+        `;
+      }
+    }
+
+    // Load nav
+    document.addEventListener('DOMContentLoaded', function() {
+      const navScript = document.createElement('script');
+      navScript.src = 'app.js';
+      document.body.appendChild(navScript);
+      
+      loadBookingDetails();
+    });
+  </script>
+</body>
+</html> 

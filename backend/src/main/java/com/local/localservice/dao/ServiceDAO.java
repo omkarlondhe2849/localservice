@@ -125,4 +125,52 @@ public class ServiceDAO {
             throw e;
         }
     }
+
+    public List<Service> searchServices(String searchTerm, String category, String location, Double minPrice, Double maxPrice) {
+        logger.debug("Executing search with term: '{}', category: '{}', location: '{}', price range: {}-{}", 
+                    searchTerm, category, location, minPrice, maxPrice);
+        try {
+            StringBuilder sql = new StringBuilder("SELECT * FROM services WHERE 1=1");
+            java.util.List<Object> params = new java.util.ArrayList<>();
+            
+            // Search term filter (title and description)
+            if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                sql.append(" AND (LOWER(title) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?))");
+                String likePattern = "%" + searchTerm.trim() + "%";
+                params.add(likePattern);
+                params.add(likePattern);
+            }
+            
+            // Category filter
+            if (category != null && !category.trim().isEmpty()) {
+                sql.append(" AND category = ?");
+                params.add(category.trim());
+            }
+            
+            // Location filter
+            if (location != null && !location.trim().isEmpty()) {
+                sql.append(" AND location = ?");
+                params.add(location.trim());
+            }
+            
+            // Price range filter
+            if (minPrice != null) {
+                sql.append(" AND price >= ?");
+                params.add(minPrice);
+            }
+            if (maxPrice != null && maxPrice != Double.POSITIVE_INFINITY) {
+                sql.append(" AND price <= ?");
+                params.add(maxPrice);
+            }
+            
+            sql.append(" ORDER BY title ASC");
+            
+            List<Service> services = jdbcTemplate.query(sql.toString(), params.toArray(), new BeanPropertyRowMapper<>(Service.class));
+            logger.info("Search returned {} services", services.size());
+            return services;
+        } catch (Exception e) {
+            logger.error("Error searching services: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
 }

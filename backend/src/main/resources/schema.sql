@@ -6,6 +6,8 @@ CREATE TABLE users (
     password VARCHAR(100),
     phone VARCHAR(20),
     role ENUM('USER', 'PROVIDER', 'ADMIN'),
+    reset_token VARCHAR(255),
+    reset_token_expiry VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -30,7 +32,14 @@ CREATE TABLE bookings (
     provider_id BIGINT,
     booking_date DATE,
     booking_time TIME,
-    status ENUM('PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'),
+    status ENUM('PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED', 'REFUNDED'),
+    payment_status ENUM('PENDING', 'PAID', 'FAILED', 'REFUNDED') DEFAULT 'PENDING',
+    stripe_session_id VARCHAR(255),
+    otp VARCHAR(10),
+    otp_expiry DATETIME,
+    provider_payout_status ENUM('PENDING', 'PAID') DEFAULT 'PENDING',
+    provider_payout_amount DECIMAL(10,2),
+    address VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,

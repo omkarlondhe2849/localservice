@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Services - Local Service Provider</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
   <nav>
@@ -16,35 +17,49 @@
     <a href="provider.html">Provider Dashboard</a>
     <a href="profile.html">Profile</a>
   </nav>
-  <div class="container">
-    <section class="services-header">
-      <h2>Available Services</h2>
-      <div class="search-filters">
+  <div class="amazon-container">
+    <aside class="filters-sidebar">
+      <h3>Filters</h3>
+      <div class="filter-group">
+        <h4>Search</h4>
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search services..." onkeyup="searchServices()">
+          <input type="text" id="searchInput" placeholder="Search services..." onkeypress="if(event.key==='Enter') searchServices()">
           <button onclick="searchServices()" class="search-btn">🔍</button>
         </div>
-        <div class="filter-options">
+      </div>
+      <div class="filter-group">
+        <h4>Category</h4>
           <select id="categoryFilter" onchange="filterServices()">
             <option value="">All Categories</option>
           </select>
+      </div>
+      <div class="filter-group">
+        <h4>Location</h4>
           <select id="locationFilter" onchange="filterServices()">
             <option value="">All Locations</option>
           </select>
+      </div>
+      <div class="filter-group">
+        <h4>Price</h4>
           <select id="priceFilter" onchange="filterServices()">
             <option value="">All Prices</option>
-            <option value="0-50">$0 - $50</option>
-            <option value="50-100">$50 - $100</option>
-            <option value="100-200">$100 - $200</option>
-            <option value="200+">$200+</option>
+            <option value="0-50">&#8377;0 - &#8377;50</option>
+            <option value="50-100">&#8377;50 - &#8377;100</option>
+            <option value="100-200">&#8377;100 - &#8377;200</option>
+            <option value="200+">&#8377;200+</option>
           </select>
-        </div>
       </div>
-    </section>
+    </aside>
+    <main class="services-main-content">
+      <h2>Available Services</h2>
     <div id="searchResults"></div>
-    <div id="servicesList" class="services-grid">Loading...</div>
-    <div id="serviceReviewContainer"></div>
+      <div id="servicesList" class="amazon-services-grid">Loading...</div>
+    </main>
   </div>
+  <div id="modalOverlay" class="modal-overlay" style="display:none;"></div>
+  <div id="bookingModal" class="modal" style="display:none;"></div>
+  <div id="reviewModalOverlay" class="modal-overlay" style="display:none;"></div>
+  <div id="reviewModal" class="modal" style="display:none;"></div>
   <script src="app.js"></script>
 </body>
 </html> 

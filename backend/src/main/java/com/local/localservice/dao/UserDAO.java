@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @Component
 public class UserDAO {
@@ -136,6 +137,30 @@ public class UserDAO {
             return count != null ? count : 0;
         } catch (Exception e) {
             logger.error("Error counting customers: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    public int update(User user) {
+        logger.debug("Executing UPDATE for user ID: {}", user.getId());
+        try {
+            // Build the query dynamically to only update password if provided
+            StringBuilder sql = new StringBuilder("UPDATE users SET name = ?, email = ?, phone = ?");
+            List<Object> params = new ArrayList<>(List.of(user.getName(), user.getEmail(), user.getPhone()));
+
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                sql.append(", password = ?");
+                params.add(user.getPassword());
+            }
+
+            sql.append(" WHERE id = ?");
+            params.add(user.getId());
+
+            int result = jdbcTemplate.update(sql.toString(), params.toArray());
+            logger.info("User updated successfully for ID: {}, rows affected: {}", user.getId(), result);
+            return result;
+        } catch (Exception e) {
+            logger.error("Error updating user for ID {}: {}", user.getId(), e.getMessage(), e);
             throw e;
         }
     }

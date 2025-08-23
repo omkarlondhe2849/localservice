@@ -13,6 +13,12 @@ public class Booking {
     private String status;  // PENDING, CONFIRMED, COMPLETED, CANCELLED
     private String createdAt;
     private String address;
+    private String paymentStatus;
+    private String stripeSessionId;
+    private String otp;
+    private java.sql.Timestamp otpExpiry;
+    private String providerPayoutStatus;
+    private java.math.BigDecimal providerPayoutAmount;
 	public Long getId() {
 		return id;
 	}
@@ -67,6 +73,18 @@ public class Booking {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+	public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public String getStripeSessionId() { return stripeSessionId; }
+    public void setStripeSessionId(String stripeSessionId) { this.stripeSessionId = stripeSessionId; }
+    public String getOtp() { return otp; }
+    public void setOtp(String otp) { this.otp = otp; }
+    public java.sql.Timestamp getOtpExpiry() { return otpExpiry; }
+    public void setOtpExpiry(java.sql.Timestamp otpExpiry) { this.otpExpiry = otpExpiry; }
+    public String getProviderPayoutStatus() { return providerPayoutStatus; }
+    public void setProviderPayoutStatus(String providerPayoutStatus) { this.providerPayoutStatus = providerPayoutStatus; }
+    public java.math.BigDecimal getProviderPayoutAmount() { return providerPayoutAmount; }
+    public void setProviderPayoutAmount(java.math.BigDecimal providerPayoutAmount) { this.providerPayoutAmount = providerPayoutAmount; }
 	@Override
 	public String toString() {
 		return "Booking [id=" + id + ", userId=" + userId + ", serviceId=" + serviceId + ", providerId=" + providerId

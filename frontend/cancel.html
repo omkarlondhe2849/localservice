@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Cancelled</title>
+</head>
+<body>
+  <h2>Payment Cancelled</h2>
+  <p>Your payment was cancelled or failed (test mode).</p>
+  <a href="services.html">Back to Services</a>
+  <script>
+    const API_BASE = 'http://localhost:8080';
+    const bookingId = localStorage.getItem('lastBookingId');
+    if (bookingId) {
+      fetch(`${API_BASE}/bookings/${bookingId}`, {
+        method: 'DELETE'
+      }).then(() => {
+        localStorage.removeItem('lastBookingId');
+      });
+    }
+  </script>
+</body>
+</html> 

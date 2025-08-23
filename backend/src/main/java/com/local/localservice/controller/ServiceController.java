@@ -42,6 +42,51 @@ public class ServiceController {
         return services;
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchServices(
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String priceRange) {
+        
+        logger.info("GET /services/search - Searching services with term: '{}', category: '{}', location: '{}', priceRange: '{}'", 
+                   searchTerm, category, location, priceRange);
+        
+        try {
+            Double minPrice = null;
+            Double maxPrice = null;
+            
+            // Parse price range if provided
+            if (priceRange != null && !priceRange.trim().isEmpty()) {
+                String[] parts = priceRange.split("-");
+                if (parts.length == 2) {
+                    if (!parts[0].equals("0")) {
+                        minPrice = Double.parseDouble(parts[0]);
+                    }
+                    if (!parts[1].equals("+")) {
+                        maxPrice = Double.parseDouble(parts[1]);
+                    } else {
+                        maxPrice = Double.POSITIVE_INFINITY;
+                    }
+                }
+            }
+            
+            List<Service> services = serviceDAO.searchServices(searchTerm, category, location, minPrice, maxPrice);
+            
+            if (services.isEmpty()) {
+                logger.info("No services found matching the search criteria");
+                return ResponseEntity.ok().body(Map.of("message", "No services found", "services", services));
+            }
+            
+            logger.info("Found {} services matching search criteria", services.size());
+            return ResponseEntity.ok().body(Map.of("services", services));
+            
+        } catch (Exception e) {
+            logger.error("Error searching services: {}", e.getMessage(), e);
+            return ResponseEntity.status(500).body("Failed to search services");
+        }
+    }
+
     @GetMapping("/{id}")
     public Service getServiceById(@PathVariable Long id) {
         logger.info("GET /services/{} - Retrieving service by ID", id);
@@ -142,9 +187,8 @@ public class ServiceController {
         try {
             int activeServices = serviceDAO.countByProviderId(providerId);
             int pendingBookings = bookingDAO.countByProviderIdAndStatus(providerId, "PENDING");
-            int completedBookings = bookingDAO.countCompletedByProviderId(providerId);
-            // For demo, assume each completed booking is $50
-            int totalEarnings = completedBookings * 50;
+            // Use actual payout sum for total earnings
+            java.math.BigDecimal totalEarnings = bookingDAO.sumProviderPayoutForCompletedBookings(providerId);
             Double avgRating = reviewDAO.getAverageRatingForProvider(providerId);
             if (avgRating == null) avgRating = 0.0;
             Map<String, Object> stats = new HashMap<>();

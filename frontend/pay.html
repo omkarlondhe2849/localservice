@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stripe Test Payment</title>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <h2>Test Stripe Payment</h2>
+  <button id="payBtn">Pay ₹10</button>
+  <script>
+    const stripe = Stripe('pk_test_51RoQN5Jca3aSItTY1BucdHOLHJHi77Y5Zty6vNrBHyoFYz64pwBR1Fan7v4lbMbxyw6QrVC4xAkmp9CayIpL6Iry00wlJ0hHst'); // Your Stripe test publishable key
+
+    document.getElementById('payBtn').onclick = async function() {
+      const res = await fetch('http://localhost:8080/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: 1000, // ₹10.00 in paise
+          currency: 'inr',
+          name: 'Test Product',
+          successUrl: window.location.origin + '/success.html',
+          cancelUrl: window.location.origin + '/cancel.html'
+        })
+      });
+      const data = await res.json();
+      if (data.id) {
+        stripe.redirectToCheckout({ sessionId: data.id });
+      } else {
+        alert('Error: ' + (data.error || 'Unknown error'));
+      }
+    };
+  </script>
+</body>
+</html> 

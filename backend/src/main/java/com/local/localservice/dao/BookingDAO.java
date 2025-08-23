@@ -5,8 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -61,16 +67,24 @@ public class BookingDAO {
                    booking.getUserId(), booking.getServiceId(), booking.getProviderId());
         try {
             String sql = "INSERT INTO bookings(user_id, service_id, provider_id, booking_date, booking_time, status, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            int result = jdbcTemplate.update(sql,
-                    booking.getUserId(),
-                    booking.getServiceId(),
-                    booking.getProviderId(),
-                    booking.getBookingDate(),
-                    booking.getBookingTime(),
-                    booking.getStatus(),
-                    booking.getAddress());
-            logger.info("Booking saved successfully, rows affected: {}", result);
-            return result;
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setLong(1, booking.getUserId());
+                ps.setLong(2, booking.getServiceId());
+                ps.setLong(3, booking.getProviderId());
+                ps.setDate(4, booking.getBookingDate());
+                ps.setTime(5, booking.getBookingTime());
+                ps.setString(6, booking.getStatus());
+                ps.setString(7, booking.getAddress());
+                return ps;
+            }, keyHolder);
+            Number key = keyHolder.getKey();
+            if (key != null) {
+                booking.setId(key.longValue());
+            }
+            logger.info("Booking saved successfully, id: {}", booking.getId());
+            return 1;
         } catch (Exception e) {
             logger.error("Error saving booking: {}", e.getMessage(), e);
             throw e;
@@ -126,6 +140,50 @@ public class BookingDAO {
             logger.error("Error retrieving booking with ID {}: {}", id, e.getMessage(), e);
             throw e;
         }
+    }
+
+    // Find bookings that are paid, not completed, and booking_date < today
+    public List<Booking> findOverdueUncompletedPaidBookings(LocalDate today) {
+        logger.debug("Finding overdue, uncompleted, paid bookings before {}", today);
+        String sql = "SELECT * FROM bookings WHERE payment_status = 'PAID' AND status != 'COMPLETED' AND booking_date < ? AND payment_status != 'REFUNDED'";
+        return jdbcTemplate.query(sql, new Object[]{Date.valueOf(today)}, new BeanPropertyRowMapper<>(Booking.class));
+    }
+
+    public int updatePaymentStatus(Long bookingId, String paymentStatus) {
+        logger.debug("Updating payment_status for booking ID: {} to {}", bookingId, paymentStatus);
+        String sql = "UPDATE bookings SET payment_status = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, paymentStatus, bookingId);
+    }
+
+    public int updateStripeSessionId(Long bookingId, String sessionId) {
+        logger.debug("Updating stripe_session_id for booking ID: {} to {}", bookingId, sessionId);
+        String sql = "UPDATE bookings SET stripe_session_id = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, sessionId, bookingId);
+    }
+
+    public int updateOtp(Long bookingId, String otp, java.sql.Timestamp expiry) {
+        logger.debug("Updating OTP for booking ID: {} to {} (expiry: {})", bookingId, otp, expiry);
+        String sql = "UPDATE bookings SET otp = ?, otp_expiry = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, otp, expiry, bookingId);
+    }
+
+    public int updateProviderPayout(Long bookingId, String payoutStatus, java.math.BigDecimal payoutAmount) {
+        logger.debug("Updating provider payout for booking ID: {} to status: {}, amount: {}", bookingId, payoutStatus, payoutAmount);
+        String sql = "UPDATE bookings SET provider_payout_status = ?, provider_payout_amount = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, payoutStatus, payoutAmount, bookingId);
+    }
+
+    public java.math.BigDecimal sumProviderPayoutForCompletedBookings(Long providerId) {
+        logger.debug("Summing provider_payout_amount for completed bookings for provider_id = {}", providerId);
+        String sql = "SELECT COALESCE(SUM(provider_payout_amount), 0) FROM bookings WHERE provider_id = ? AND status = 'COMPLETED' AND provider_payout_status = 'PAID'";
+        java.math.BigDecimal sum = jdbcTemplate.queryForObject(sql, new Object[]{providerId}, java.math.BigDecimal.class);
+        return sum != null ? sum : java.math.BigDecimal.ZERO;
+    }
+
+    public int delete(Long bookingId) {
+        logger.debug("Deleting booking with ID: {}", bookingId);
+        String sql = "DELETE FROM bookings WHERE id = ?";
+        return jdbcTemplate.update(sql, bookingId);
     }
 }
 

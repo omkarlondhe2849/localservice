@@ -18,77 +18,212 @@
   </nav>
   <div class="container">
     <section class="hero-section">
-      <h1>Welcome to <span style="color: var(--primary)">Local Service Provider</span></h1>
-      <p class="hero-subtitle">Connect with trusted local service providers in your area</p>
-      <div class="cta-buttons">
-        <a href="services.html" class="btn-primary">Browse Services</a>
-        <a href="register.html" class="btn-secondary">Join as Provider</a>
+      <div class="hero-background">
+        <div class="hero-particles"></div>
+        <div class="hero-gradient"></div>
+      </div>
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="hero-badge">
+
+          </div>
+          <h1 class="hero-title">
+            <span class="title-line-1">Welcome to</span>
+            <span class="title-line-2">Local Service Provider</span>
+            <span class="title-highlight">Your neighborhood, simplified</span>
+          </h1>
+          <p class="hero-subtitle">
+            Connect with <strong>verified</strong> and <strong>trusted</strong> local service providers in your area. 
+            From home repairs to personal services, we've got you covered with just a few clicks.
+          </p>
+          <div class="hero-features">
+            <div class="hero-feature">
+              <div class="feature-icon">⚡</div>
+              <span>Instant Booking</span>
+            </div>
+            <div class="hero-feature">
+              <div class="feature-icon">🛡️</div>
+              <span>Verified Providers</span>
+            </div>
+            <div class="hero-feature">
+              <div class="feature-icon">💯</div>
+              <span>Quality Guaranteed</span>
+            </div>
+          </div>
+          <div class="cta-buttons">
+            <a href="services.html" class="btn-primary">
+              <span class="btn-icon">🔍</span>
+              Browse Services
+              <span class="btn-arrow">→</span>
+            </a>
+            <a href="register.html" class="btn-secondary">
+              <span class="btn-icon">👥</span>
+              Join as Provider
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-number" id="hero-providers-count">500+</div>
+              <div class="stat-label">Active Providers</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-number" id="hero-services-count">50+</div>
+              <div class="stat-label">Service Categories</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-number" id="hero-rating">4.8★</div>
+              <div class="stat-label">Average Rating</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="image-container">
+            <img src="images/services-collage.webp" alt="Local Services Collage" class="services-collage">
+            <div class="image-overlay">
+              <div class="floating-badge">
+                <span class="badge-icon">✨</span>
+                <span class="badge-text">50+ Services</span>
+              </div>
+              <div class="floating-badge badge-2">
+                <span class="badge-icon">⭐</span>
+                <span class="badge-text">Top Rated</span>
+              </div>
+              <div class="floating-badge badge-3">
+                <span class="badge-icon">🚀</span>
+                <span class="badge-text">Fast Booking</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <section class="features-section">
-      <h2>Why Choose Us?</h2>
+      <div class="section-header">
+        <h2 class="section-title">Why Choose Us?</h2>
+        <p class="section-subtitle">Discover what makes our platform the best choice for local services</p>
+      </div>
       <div class="features-grid">
         <div class="feature-card">
-          <h3>🔍 Easy Discovery</h3>
-          <p>Find local services quickly with our comprehensive search and filtering options.</p>
+          <div class="feature-icon-wrapper">
+            <div class="feature-icon-bg">🔍</div>
+          </div>
+          <h3 class="feature-title">Easy Discovery</h3>
+          <p class="feature-description">Find local services quickly with our comprehensive search and filtering options.</p>
+          <div class="feature-highlight"></div>
         </div>
         <div class="feature-card">
-          <h3>⭐ Verified Providers</h3>
-          <p>All our service providers are verified and reviewed by the community.</p>
+          <div class="feature-icon-wrapper">
+            <div class="feature-icon-bg">⭐</div>
+          </div>
+          <h3 class="feature-title">Verified Providers</h3>
+          <p class="feature-description">All our service providers are verified and reviewed by the community.</p>
+          <div class="feature-highlight"></div>
         </div>
         <div class="feature-card">
-          <h3>📅 Simple Booking</h3>
-          <p>Book services instantly with our streamlined booking process.</p>
+          <div class="feature-icon-wrapper">
+            <div class="feature-icon-bg">📅</div>
+          </div>
+          <h3 class="feature-title">Simple Booking</h3>
+          <p class="feature-description">Book services instantly with our streamlined booking process.</p>
+          <div class="feature-highlight"></div>
         </div>
         <div class="feature-card">
-          <h3>💬 Real Reviews</h3>
-          <p>Read authentic reviews from real customers to make informed decisions.</p>
+          <div class="feature-icon-wrapper">
+            <div class="feature-icon-bg">💬</div>
+          </div>
+          <h3 class="feature-title">Real Reviews</h3>
+          <p class="feature-description">Read authentic reviews from real customers to make informed decisions.</p>
+          <div class="feature-highlight"></div>
         </div>
       </div>
     </section>
     <section class="stats-section">
-      <h2>Platform Statistics</h2>
+      <div class="section-header">
+        <h2 class="section-title">Platform Statistics</h2>
+        <p class="section-subtitle">Real-time numbers that showcase our growing community</p>
+      </div>
       <div class="stats-grid" id="stats-grid">
         <div class="stat-card">
-          <h3>50+</h3>
-          <p>Active Services</p>
+          <div class="stat-icon">📈</div>
+          <h3 class="stat-number" id="platform-services-count">50+</h3>
+          <p class="stat-label">Service Categories</p>
+          <!-- <div class="stat-progress">
+            <div class="stat-progress-bar" style="width: 85%"></div>
+          </div> -->
         </div>
         <div class="stat-card">
-          <h3>25+</h3>
-          <p>Verified Providers</p>
+          <div class="stat-icon">👥</div>
+          <h3 class="stat-number" id="platform-providers-count">500+</h3>
+          <p class="stat-label">Active Providers</p>
+          <!-- <div class="stat-progress">
+            <div class="stat-progress-bar" style="width: 92%"></div>
+          </div> -->
         </div>
         <div class="stat-card">
-          <h3>100+</h3>
-          <p>Happy Customers</p>
+          <div class="stat-icon">🎉</div>
+          <h3 class="stat-number" id="platform-customers-count">10,000+</h3>
+          <p class="stat-label">Happy Customers</p>
+          <!-- <div class="stat-progress">
+            <div class="stat-progress-bar" style="width: 96%"></div>
+          </div> -->
         </div>
         <div class="stat-card">
-          <h3>4.8★</h3>
-          <p>Average Rating</p>
+          <div class="stat-icon">⭐</div>
+          <h3 class="stat-number" id="platform-rating">4.8★</h3>
+          <p class="stat-label">Average Rating</p>
+          <!-- <div class="stat-progress">
+            <div class="stat-progress-bar" style="width: 96%"></div>
+          </div> -->
         </div>
       </div>
     </section>
     <section class="categories-section">
-      <h2>Popular Service Categories</h2>
+      <div class="section-header">
+        <h2 class="section-title">Popular Service Categories</h2>
+        <p class="section-subtitle">Explore our most requested service categories and find what you need</p>
+      </div>
       <div class="categories-grid">
-        <div class="category-card">
-          <h3>Home Services</h3>
-          <p>Cleaning, Repairs, Maintenance</p>
-        </div>
-        <div class="category-card">
-          <h3>Professional Services</h3>
-          <p>Consulting, Design, Development</p>
-        </div>
-        <div class="category-card">
-          <h3>Health & Wellness</h3>
-          <p>Fitness, Therapy, Wellness</p>
-        </div>
-        <div class="category-card">
-          <h3>Education & Training</h3>
-          <p>Tutoring, Coaching, Workshops</p>
-        </div>
+        <a href="services.html?category=Home Services" class="category-card-link">
+          <div class="category-card">
+            <div class="category-icon">🏠</div>
+            <h3 class="category-title">Home Services</h3>
+            <p class="category-description">Cleaning, Repairs, Maintenance</p>
+            <div class="category-arrow">→</div>
+            <div class="category-hover-effect"></div>
+          </div>
+        </a>
+        <a href="services.html?category=Professional Services" class="category-card-link">
+          <div class="category-card">
+            <div class="category-icon">💼</div>
+            <h3 class="category-title">Professional Services</h3>
+            <p class="category-description">Consulting, Design, Development</p>
+            <div class="category-arrow">→</div>
+            <div class="category-hover-effect"></div>
+          </div>
+        </a>
+        <a href="services.html?category=Health & Wellness" class="category-card-link">
+          <div class="category-card">
+            <div class="category-icon">🌱</div>
+            <h3 class="category-title">Health &amp; Wellness</h3>
+            <p class="category-description">Fitness, Therapy, Wellness</p>
+            <div class="category-arrow">→</div>
+            <div class="category-hover-effect"></div>
+          </div>
+        </a>
+        <a href="services.html?category=Education & Training" class="category-card-link">
+          <div class="category-card">
+            <div class="category-icon">📚</div>
+            <h3 class="category-title">Education &amp; Training</h3>
+            <p class="category-description">Tutoring, Coaching, Workshops</p>
+            <div class="category-arrow">→</div>
+            <div class="category-hover-effect"></div>
+          </div>
+        </a>
       </div>
     </section>
   </div>
   <script src="app.js"></script>
 </body>
-</html> 
+</html>
